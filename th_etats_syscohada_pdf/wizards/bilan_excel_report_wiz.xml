@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="view_bilan_excel_report_view_form">
+        <field name="name">bilan.excel.wiz.form</field>
+        <field name="model">bilan.excel.wiz</field>
+        <field name="arch" type="xml">
+            <form string="Bilan">
+                <group>
+                    <group>
+	                    <field name="date_fin"/>
+	                </group>
+	                <group>
+	                    <field name="est_comptabilise"/>
+	                </group>
+                </group>
+              <footer>
+                    <button name="get_item_data" type="object" string="Créer le fichier" class="oe_highlight"/>
+                    Or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_payroll_excel">
+        <field name="name">view.bilan.report.excel</field>
+        <field name="model">bilan.excel</field>
+        <field name="arch" type="xml">
+            <form string="Télécharger le bilan ici">
+                <field name="name" invisible="1"/>
+                <field name="file_download" filename="name"/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_bilan_excel" model="ir.actions.act_window">
+        <field name="name">Bilan</field>
+        <field name="res_model">bilan.excel.wiz</field>
+        <!-- <field name="view_type">form</field> -->
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_bilan_excel_report" name="Bilan excel" action="action_bilan_excel"
+              parent="menu_rapport_ohada"/>
+</odoo>

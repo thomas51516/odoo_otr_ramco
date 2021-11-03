@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_print_bilan,print.bilan,model_print_bilan,,1,1,1,1
+access_compte_resultat,compte.resultat,model_compte_resultat,,1,1,1,1
+access_bilan_excel_wiz,bilan.excel.wiz,model_bilan_excel_wiz,,1,1,1,1
+access_bilan_excel,bilan.excel,model_bilan_excel,,1,1,1,1
