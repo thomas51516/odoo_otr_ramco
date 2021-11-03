@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data noupdate="0">
+		<!-- type de structure salariale -->
+		<record  id="benin_salary_structure_id" model="hr.payroll.structure">
+			<field name="name">PAIE BENIN</field>
+			<field name="type_id" ref="hr_contract.structure_type_employee"/>
+		</record>
+		<!-- Catégorie de rubrique -->
+		<record  id="gain_imposable" model="hr.salary.rule.category">
+			<field name="name">GAIN IMPOSABLE</field>
+			<field name="code">BASIC</field>
+		</record>
+
+		<record  id="retenu" model="hr.salary.rule.category">
+			<field name="name">RETENUE</field>
+			<field name="code">DED</field>
+		</record>
+
+		<record  id="autre_gain_et_retenu" model="hr.salary.rule.category">
+			<field name="name">AUTRE GAIN ET RETENUE</field>
+			<field name="code">ATRGR</field>
+		</record>
+
+		<record  id="charge_patronale" model="hr.salary.rule.category">
+			<field name="name">CHARGE PATRONALE</field>
+			<field name="code">COMP</field>
+		</record>
+	</data>
+	<!-- Rubriques avec des règles de calcule salariale-->
+	<data>
+		<record  id="sursalaire" model="hr.salary.rule">
+			<field name="name">sursalaire</field>
+			<field name="code">105</field>
+			<field name="category_id" ref="gain_imposable" />
+			<field name="struct_id" ref="benin_salary_structure_id"/>
+			<field name="sequence">105</field>
+			<field name="active">TRUE</field>
+			<field name="appears_on_payslip">TRUE</field>
+			<field name="amount_select">code</field>
+			<field name="amount_python_compute">result = contract.sursalaire</field>
+		</record>
+		<record  id="salaire_heure_sp_12_jour" model="hr.salary.rule">
+			<field name="name">Heures sup jour 12%</field>
+			<field name="code">110</field>
+			<field name="category_id" ref="gain_imposable" />
+			<field name="sequence">110</field>
+			<field name="active">TRUE</field>
+			<field name="struct_id" ref="benin_salary_structure_id"/>
+			<field name="appears_on_payslip">TRUE</field>
+			<field name="amount_select">code</field>
+			<field name="amount_python_compute">result = contract.taux_horaire  * contract.heure_sup_12_jour*1.12</field>
+		</record>
+		<record  id="salaire_heure_sp_35_jour" model="hr.salary.rule">
+			<field name="name">Heures sup jour 35%</field>
+			<field name="code">111</field>
+			<field name="category_id" ref="gain_imposable" />
+			<field name="sequence">111</field>
+			<field name="active">TRUE</field>
+			<field name="struct_id" ref="benin_salary_structure_id"/>
+			<field name="appears_on_payslip">TRUE</field>
+			<field name="amount_select">code</field>
+			<field name="quantity">contract.heure_sup_35_jour</field>
+			<field name="amount_python_compute">result = contract.taux_horaire * contract.heure_sup_35_jour*1.35</field>
+		</record>
+		<record  id="salaire_heure_sp_50_jour" model="hr.salary.rule">
+			<field name="name">Heures sup jour 50%</field>
+			<field name="code">112</field>
+			<field name="category_id" ref="gain_imposable" />
+			<field name="sequence">112</field>
+			<field name="active">TRUE</field>
+			<field name="struct_id" ref="benin_salary_structure_id"/>
+			<field name="appears_on_payslip">TRUE</field>
+			<field name="amount_select">code</field>
+			<field name="amount_python_compute">result = contract.taux_horaire * contract.heure_sup_50_jour*1.50</field>
+		</record>
+		<record  id="salaire_heure_sp_50_ferie" model="hr.salary.rule">
+			<field name="name">Heures sup jour  férier 50%</field>
+			<field name="code">113</field>
+			<field name="category_id" ref="gain_imposable" />
+			<field name="sequence">113</field>
+			<field name="active">TRUE</field>
+			<field name="struct_id" ref="benin_salary_structure_id"/>
+			<field name="appears_on_payslip">TRUE</field>
+			<field name="amount_select">code</field>
+			<field name="amount_python_compute">result = contract.taux_horaire * contract.heure_sup_50_jour_ferier*1.50</field>
+		</record>
+		<record  id="salaire_heure_sp_100_nuit" model="hr.salary.rule">
+			<field name="name">Heures sup nuit 100%</field>
+			<field name="code">114</field>
+			<field name="category_id" ref="gain_imposable" />
+			<field name="sequence">114</field>
+			<field name="active">TRUE</field>
+			<field name="struct_id" ref="benin_salary_structure_id"/>
+			<field name="appears_on_payslip">TRUE</field>
+			<field name="amount_select">code</field>
+			<field name="amount_python_compute">result = contract.taux_horaire * contract.heure_sup_100_nuit*2</field>
+		</record>
+		<record  id="prime_garde" model="hr.salary.rule">
+			<field name="name">Prime de Garde</field>
+			<field name="code">115</field>
+			<field name="category_id" ref="gain_imposable" />
+			<field name="struct_id" ref="benin_salary_structure_id"/>
+			<field name="sequence">115</field>
+			<field name="active">TRUE</field>
+			<field name="appears_on_payslip">TRUE</field>
+			<field name="amount_select">code</field>
+			<field name="amount_python_compute">result = contract.prime_garde</field>
+		</record>
+		<record  id="rapel_salaire_imp" model="hr.salary.rule">
+			<field name="name">Rappel sur salaire</field>
+			<field name="code">120</field>
+			<field name="category_id" ref="gain_imposable" />
+			<field name="struct_id" ref="benin_salary_structure_id"/>
+			<field name="sequence">120</field>
+			<field name="active">TRUE</field>
+			<field name="appears_on_payslip">TRUE</field>
+			<field name="amount_select">code</field>
+			<field name="amount_python_compute">result = contract.rapel_salaire_imp</field>
+		</record>
+		<record  id="indemnite_transport" model="hr.salary.rule">
+			<field name="name">Indemnité de transport</field>
+			<field name="code">125</field>
+			<field name="category_id" ref="gain_imposable" />
+			<field name="struct_id" ref="benin_salary_structure_id"/>
+			<field name="sequence">125</field>
+			<field name="active">TRUE</field>
+			<field name="appears_on_payslip">TRUE</field>
+			<field name="amount_select">code</field>
+			<field name="amount_python_compute">result = contract.indemnite_transport</field>
+		</record>
+		<record  id="prime_rendement" model="hr.salary.rule">
+			<field name="name">Prime de rendement</field>
+			<field name="code">130</field>
+			<field name="category_id" ref="gain_imposable" />
+			<field name="struct_id" ref="benin_salary_structure_id"/>
+			<field name="sequence">130</field>
+			<field name="active">TRUE</field>
+			<field name="appears_on_payslip">TRUE</field>
+			<field name="amount_select">code</field>
+			<field name="amount_python_compute">result = contract.prime_rendement</field>
+		</record>
+		<record  id="prime_risque" model="hr.salary.rule">
+			<field name="name">Prime de risque</field>
+			<field name="code">135</field>
+			<field name="category_id" ref="gain_imposable" />
+			<field name="struct_id" ref="benin_salary_structure_id"/>
+			<field name="sequence">135</field>
+			<field name="active">TRUE</field>
+			<field name="appears_on_payslip">TRUE</field>
+			<field name="amount_select">code</field>
+			<field name="amount_python_compute">result = contract.prime_risque</field>
+		</record>
+
+		<record  id="prime_speciale" model="hr.salary.rule">
+			<field name="name">Prime spéciale</field>
+			<field name="code">140</field>
+			<field name="category_id" ref="gain_imposable" />
+			<field name="struct_id" ref="benin_salary_structure_id"/>
+			<field name="sequence">140</field>
+			<field name="active">TRUE</field>
+			<field name="appears_on_payslip">TRUE</field>
+			<field name="amount_select">code</field>
+			<field name="amount_python_compute">result = contract.prime_speciale</field>
+		</record>
+
+		<record  id="astreinte" model="hr.salary.rule">
+			<field name="name">Astreinte</field>
+			<field name="code">145</field>
+			<field name="category_id" ref="gain_imposable" />
+			<field name="struct_id" ref="benin_salary_structure_id"/>
+			<field name="sequence">145</field>
+			<field name="active">TRUE</field>
+			<field name="appears_on_payslip">TRUE</field>
+			<field name="amount_select">code</field>
+			<field name="amount_python_compute">result = contract.astreinte</field>
+		</record>
+
+		<record  id="prime_responsabilite" model="hr.salary.rule">
+			<field name="name">Prime de responsabilté</field>
+			<field name="code">150</field>
+			<field name="category_id" ref="gain_imposable" />
+			<field name="struct_id" ref="benin_salary_structure_id"/>
+			<field name="sequence">150</field>
+			<field name="active">TRUE</field>
+			<field name="appears_on_payslip">TRUE</field>
+			<field name="amount_select">code</field>
+			<field name="amount_python_compute">result = contract.prime_responsabilite</field>
+		</record>
+
+		<record  id="prime_specialite" model="hr.salary.rule">
+			<field name="name">Prime de spécialité</field>
+			<field name="code">155</field>
+			<field name="category_id" ref="gain_imposable" />
+			<field name="struct_id" ref="benin_salary_structure_id"/>
+			<field name="sequence">155</field>
+			<field name="active">TRUE</field>
+			<field name="appears_on_payslip">TRUE</field>
+			<field name="amount_select">code</field>
+			<field name="amount_python_compute">result = contract.prime_specialite</field>
+		</record>
+
+		<record  id="prime_sujetion" model="hr.salary.rule">
+			<field name="name">Prime de sujétion</field>
+			<field name="code">160</field>
+			<field name="category_id" ref="gain_imposable" />
+			<field name="struct_id" ref="benin_salary_structure_id"/>
+			<field name="sequence">160</field>
+			<field name="active">TRUE</field>
+			<field name="appears_on_payslip">TRUE</field>
+			<field name="amount_select">code</field>
+			<field name="amount_python_compute">result = contract.prime_sujetion</field>
+		</record>
+		<record  id="indemnite_deloignement" model="hr.salary.rule">
+			<field name="name">Indemnité d’éloignement</field>
+			<field name="code">165</field>
+			<field name="category_id" ref="gain_imposable" />
+			<field name="struct_id" ref="benin_salary_structure_id"/>
+			<field name="sequence">165</field>
+			<field name="active">TRUE</field>
+			<field name="appears_on_payslip">TRUE</field>
+			<field name="amount_select">code</field>
+			<field name="amount_python_compute">result = contract.indemnite_deloignement</field>
+		</record>
+		<record  id="prime_de_performance" model="hr.salary.rule">
+			<field name="name">Prime de performance</field>
+			<field name="code">170</field>
+			<field name="category_id" ref="gain_imposable" />
+			<field name="struct_id" ref="benin_salary_structure_id"/>
+			<field name="sequence">170</field>
+			<field name="active">TRUE</field>
+			<field name="appears_on_payslip">TRUE</field>
+			<field name="amount_select">code</field>
+			<field name="amount_python_compute">result = contract.prime_de_performance</field>
+		</record>
+
+		<record  id="appel_urgence" model="hr.salary.rule">
+			<field name="name">Appel d'Urgence</field>
+			<field name="code">175</field>
+			<field name="category_id" ref="gain_imposable" />
+			<field name="struct_id" ref="benin_salary_structure_id"/>
+			<field name="sequence">175</field>
+			<field name="active">TRUE</field>
+			<field name="appears_on_payslip">TRUE</field>
+			<field name="amount_select">code</field>
+			<field name="amount_python_compute">result = contract.appel_urgence</field>
+		</record>
+
+		<record  id="retenue_css_assurance_viellesse" model="hr.salary.rule">
+			<field name="name">CNSS : ASSURANCE VIELLESSE</field>
+			<field name="code">200</field>
+			<field name="category_id" ref="retenu" />
+			<field name="struct_id" ref="benin_salary_structure_id"/>
+			<field name="sequence">200</field>
+			<field name="active">TRUE</field>
+			<field name="appears_on_payslip">TRUE</field>
+			<field name="amount_select">percentage</field>
+			<field name="amount_percentage_base">categories.BASIC</field>
+			<field name="amount_percentage">3.6</field>
+		</record>
+
+		<record  id="retenue_css_assurance_viellesse_patronal" model="hr.salary.rule">
+			<field name="name">CNSS : ASSURANCE VIELLESSE PATRONAL</field>
+			<field name="code">210</field>
+			<field name="category_id" ref="charge_patronale" />
+			<field name="struct_id" ref="benin_salary_structure_id"/>
+			<field name="sequence">210</field>
+			<field name="active">TRUE</field>
+			<field name="appears_on_payslip">TRUE</field>
+			<field name="amount_select">percentage</field>
+			<field name="amount_percentage_base">categories.BASIC</field>
+			<field name="amount_percentage">6.40</field>
+		</record>
+		<record  id="retenue_css_prestation_familliale" model="hr.salary.rule">
+			<field name="name">CNSS : PRESTATION FAMILLIALE</field>
+			<field name="code">215</field>
+			<field name="category_id" ref="charge_patronale" />
+			<field name="struct_id" ref="benin_salary_structure_id"/>
+			<field name="sequence">215</field>
+			<field name="active">TRUE</field>
+			<field name="appears_on_payslip">TRUE</field>
+			<field name="amount_select">percentage</field>
+			<field name="amount_percentage_base">categories.BASIC</field>
+			<field name="amount_percentage">9</field>
+		</record>
+
+		<record  id="retenue_css_prestation_risque_prof" model="hr.salary.rule">
+			<field name="name">CNSS : RISQUES PROFESSIONNELS</field>
+			<field name="code">230</field>
+			<field name="category_id" ref="charge_patronale" />
+			<field name="struct_id" ref="benin_salary_structure_id"/>
+			<field name="sequence">230</field>
+			<field name="active">TRUE</field>
+			<field name="appears_on_payslip">TRUE</field>
+			<field name="amount_select">percentage</field>
+			<field name="amount_percentage_base">categories.BASIC</field>
+			<field name="amount_percentage">4</field>
+		</record>
+
+		<record  id="retenue_irpp" model="hr.salary.rule">
+			<field name="name">Retenue IRPP</field>
+			<field name="code">240</field>
+			<field name="category_id" ref="retenu" />
+			<field name="struct_id" ref="benin_salary_structure_id"/>
+			<field name="sequence">240</field>
+			<field name="active">TRUE</field>
+			<field name="appears_on_payslip">TRUE</field>
+			<field name="amount_select">code</field>
+			<field name="amount_python_compute">salaireBrut = categories.BASIC
+a = salaireBrut
+
+b = str(a)[-3] + str(a)[-2] + str(a)[-1]
+c = float(b)
+d = a-c
+baseirpp =  d
+tranche1 = baseirpp &lt; 50000 >= 0
+tranche2 = baseirpp &lt; 130000 and baseirpp >= 50000
+tranche3 = baseirpp &lt; 280000 and baseirpp >= 130000
+tranche4 = baseirpp &lt; 530000 and baseirpp >= 280000
+tranche5 = baseirpp >= 530000
+
+tranche1_irpp = (50000 - 0)*0/100
+tranche2_irpp = (130000 - 50000)*10/100
+tranche3_irpp = (280000 - 130000)*15/100
+tranche4_irpp = (530000 - 280000)*20/100
+tranche6_irpp = (baseirpp)*30/100
+
+if tranche1:
+    irpp = baseirpp * 0 / 100
+if tranche2:
+    irpp = tranche1_irpp + (baseirpp - 50000) * 10/100
+if tranche3:
+    irpp = tranche1_irpp + tranche2_irpp + (baseirpp - 130000) * 15/100
+if tranche4:
+    irpp = tranche1_irpp + tranche2_irpp + \
+        tranche3_irpp + (baseirpp - 280000) * 20/100
+if tranche5:
+    irpp = tranche1_irpp + tranche2_irpp + tranche3_irpp + \
+        tranche4_irpp + (baseirpp - 530000) * 30/100
+enfants = employee.children
+reduction = 0
+if enfants == 1:
+    reduction = irpp * 0 / 100
+if enfants == 2:
+    reduction = irpp * 5 / 100
+if enfants == 3:
+    reduction = irpp * 10 / 100
+if enfants == 4:
+    reduction = irpp * 15 / 100
+if enfants == 5:
+    reduction = irpp * 20 / 100
+if enfants > 5:
+    reduction = irpp * 23 / 100
+
+irpp_net = irpp - reduction
+
+result = irpp_net</field>
+		</record>
+		<record  id="retenue_vps" model="hr.salary.rule">
+			<field name="name">VPS</field>
+			<field name="code">235</field>
+			<field name="category_id" ref="charge_patronale" />
+			<field name="struct_id" ref="benin_salary_structure_id"/>
+			<field name="sequence">235</field>
+			<field name="active">TRUE</field>
+			<field name="appears_on_payslip">TRUE</field>
+			<field name="amount_select">percentage</field>
+			<field name="amount_percentage_base">categories.BASIC</field>
+			<field name="amount_percentage">4</field>
+		</record>
+
+		<record  id="total_cotisation" model="hr.salary.rule">
+			<field name="name">Total cotisation</field>
+			<field name="code">500</field>
+			<field name="category_id" ref="autre_gain_et_retenu" />
+			<field name="struct_id" ref="benin_salary_structure_id"/>
+			<field name="sequence">500</field>
+			<field name="active">TRUE</field>
+			<field name="appears_on_payslip">FALSE</field>
+			<field name="amount_select">code</field>
+			<field name="amount_python_compute">result = categories.DED</field>
+		</record>
+
+		<record  id="prime_caisse" model="hr.salary.rule">
+			<field name="name">Prime de caisse</field>
+			<field name="code">600</field>
+			<field name="category_id" ref="autre_gain_et_retenu" />
+			<field name="struct_id" ref="benin_salary_structure_id"/>
+			<field name="sequence">600</field>
+			<field name="active">TRUE</field>
+			<field name="appears_on_payslip">TRUE</field>
+			<field name="amount_select">code</field>
+			<field name="amount_python_compute">result = contract.prime_caisse</field>
+		</record>
+
+		<record  id="prime_panier" model="hr.salary.rule">
+			<field name="name">Prime de panier</field>
+			<field name="code">610</field>
+			<field name="category_id" ref="autre_gain_et_retenu" />
+			<field name="struct_id" ref="benin_salary_structure_id"/>
+			<field name="sequence">610</field>
+			<field name="active">TRUE</field>
+			<field name="appears_on_payslip">TRUE</field>
+			<field name="amount_select">code</field>
+			<field name="amount_python_compute">result = contract.prime_panier</field>
+		</record>
+
+		<record  id="regularisation_salaire_net" model="hr.salary.rule">
+			<field name="name">Ajustement salaire net</field>
+			<field name="code">620</field>
+			<field name="category_id" ref="autre_gain_et_retenu" />
+			<field name="struct_id" ref="benin_salary_structure_id"/>
+			<field name="sequence">620</field>
+			<field name="active">TRUE</field>
+			<field name="appears_on_payslip">TRUE</field>
+			<field name="amount_select">code</field>
+			<field name="amount_python_compute">result = contract.regularisation_salaire_net</field>
+		</record>
+		<record  id="provision_cp" model="hr.salary.rule">
+			<field name="name">Provision CP</field>
+			<field name="code">625</field>
+			<field name="category_id" ref="autre_gain_et_retenu" />
+			<field name="struct_id" ref="benin_salary_structure_id"/>
+			<field name="sequence">625</field>
+			<field name="active">TRUE</field>
+			<field name="appears_on_payslip">TRUE</field>
+			<field name="amount_select">code</field>
+			<field name="amount_python_compute">result = contract.provision_cp</field>
+		</record>
+		<record  id="remboursement_pret" model="hr.salary.rule">
+			<field name="name">Remboursement Prêt</field>
+			<field name="code">630</field>
+			<field name="category_id" ref="autre_gain_et_retenu" />
+			<field name="struct_id" ref="benin_salary_structure_id"/>
+			<field name="sequence">630</field>
+			<field name="active">TRUE</field>
+			<field name="appears_on_payslip">TRUE</field>
+			<field name="amount_select">code</field>
+			<field name="amount_python_compute">result = contract.remboursement_pret</field>
+		</record>
+	</data>
+</odoo>

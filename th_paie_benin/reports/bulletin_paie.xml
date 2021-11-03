@@ -1,0 +1,514 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="paperformat_bulltin_paie" model="report.paperformat">
+      <field name="name">BULLETIN A4</field>
+      <field name="default" eval="True"/>
+      <field name="format">custom</field>
+      <field name="page_height">210</field>
+      <field name="page_width">297</field>
+      <!-- <field name="orientation">portrait</field> -->
+      <field name="margin_top">10</field>
+      <field name="margin_bottom">0</field>
+      <field name="margin_left">7</field>
+      <field name="margin_right">7</field>
+      <field name="header_line" eval="False"/>
+      <field name="header_spacing">35</field>
+      <field name="dpi">90</field>
+  </record>
+
+	<report 
+		id = "bulletin_paie_report_view" 
+		model = "hr.payslip" 
+		string = "BULLETIN DE PAIE BENIN" 
+		report_type = "qweb-pdf" 
+		name = "th_paie_benin.hr_payroll_bulletin_paie" 
+		file = "th_paie_benin.hr_payroll_bulletin_paie"
+    paperformat="paperformat_bulltin_paie"
+
+	/>
+	<template id="hr_payroll_bulletin_paie">
+		 <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <!--<t t-call="web.internal_layout">-->
+            <style type="text/css">
+              html{
+              /*font-family: Century Gothic;*/
+              }
+              .MyTable {
+                 border-collapse:collapse;
+                 border:1px solid black;
+                 width: 100%;
+                 font-family:'Arial Narrow' font-size:16;
+                }
+              .sparator{
+                color:white;
+              }
+              .totalback{
+                background-color: lightgray
+              }
+              .MyTable td {
+                 border:1px solid black;
+                 border-bottom : 0px;
+                 border-top: 0px;
+                 margin-left: 150px;
+                 font-family:'Arial Narrow'; font-size:15;
+               }
+               .MyTable tr{
+                border-bottom : 0px;
+                 border-top: 0px;
+                 font-family:'Arial Narrow'; font-size:15;
+               }
+               .MyTable th{
+                border:1px solid black;
+                font-family:'Arial Narrow'; font-size:15;
+               }
+               .MyTable thead td{
+                border:1px solid black;
+                text-align: center;
+                font-family:'Arial Narrow'; font-size:15;
+               }
+               .entete {
+                 text-align: center;
+                 font-family:'Arial Narrow'; font-size:15;
+               }
+               .img{
+                  width: 200px;
+                  height: 150px;
+                  font-family:'Arial Narrow'; font-size:15;
+                 }
+              .montant{
+                text-align: right;
+                font-family:'Arial Narrow'; font-size:15;
+              }
+              .company{
+                font-size: 22px;
+                font-weight: bold;
+                font-family:'Arial Narrow'; font-size:15;
+              }
+             
+             .rubrique{
+              font-size: 20;
+              font-family:'Arial Narrow'; font-size:15;
+             }
+             .montant-total{
+               font-family:'Arial Narrow'; font-size:15;
+             }
+            </style>
+                <div class="page" style="border: 2px solid black; font-family:'Arial Narrow' font-size:10; width: 100%; padding: -20px; height: auto; margin-top:30px;">
+                 <table class="MyTable entete">
+                  <tr>
+                    <td><img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" width="170" height="160" alt="Logo"/>
+                    </td>
+                    <td><h1 style="color : rgb(31,62,124);">BULLETIN DE PAIE</h1>
+                    <p><span  class="company" t-esc="o.company_id.name"/><br/>
+                    <span t-esc="o.company_id.street"/>
+                    <span t-esc="o.company_id.zip"/> <span t-esc="o.company_id.city"/> -<span t-esc="o.company_id.country_id.name"/><br/>
+                    Tel : <span t-esc="o.company_id.phone"/> E-mail : <span t-esc="o.company_id.email"/><br/>
+                    </p>
+                    </td>
+                  </tr>
+                </table>
+                <table class="MyTable">
+                    <tr>
+                      <td>Nom et prénoms</td>
+                      <td><h4><span t-field="o.employee_id.name"/></h4></td>
+                      <td>Téléphone</td>
+                      <td><span t-field="o.employee_id.emergency_contact"/></td>
+                    </tr>
+                    <tr>
+                      <td>Matricule</td>
+                      <td><span t-esc="o.employee_id.matricule"/></td>
+                      <td>Poste occupé</td>
+                      <td><span t-field="o.employee_id.job_id"/></td>
+                    </tr>
+                    <tr>
+                      <td>Département</td>
+                      <td><span t-field="o.employee_id.contract_id.department_id"/></td>
+                      <td>Numéro CNSS</td>
+                      <td><span t-field="o.employee_id.numero_cnss"/></td>
+                    </tr>
+                    <tr>
+                      <td>Etablissement</td>
+                      <td><span t-field="o.company_id.name"/></td>
+                      <td>Titre</td>
+                      <td><span t-field="o.employee_id.job_title"/></td>
+                    </tr>
+                    <tr>
+                      <td>Valeur indice</td>
+                      <td><span t-field="o.employee_id.indice"/></td>
+                      <td>N° Compte</td>
+                      <td><span t-field="o.employee_id.count_bancaire"/></td>
+                    </tr>
+                    <tr>
+                      <td>Mode de règlement</td>
+                      <td><span t-field="o.employee_id.contract_id.type_paiement"/></td>
+                      <td>Banque</td>
+                      <td><span t-field="o.employee_id.bank_account_id.acc_number"/></td>
+                    </tr>
+                     <t t-set="datef" t-value="datetime.date.today().strftime('%Y,%m,%d')"/>
+                     <t t-set="dated" t-value="o.contract_id.date_start.strftime('%Y,%m,%d')"/>
+                     <t t-set="n1" t-value="datef.split(',')"/>
+                     <t t-set="n2" t-value="dated.split(',')"/>
+       
+                     <t t-set="d0" t-value="datetime.date(int(n1[0]),int(n1[1]),int(n1[2]))"/>
+                     <t t-set="d1" t-value="datetime.date(int(n2[0]),int(n2[1]),int(n2[2]))"/>
+                     
+                     <t t-set="deltat" t-value="d0 - d1"/>
+                     
+                     <t t-set="annee" t-value="(deltat.days) / 365"/> 
+                     <t t-set="mois" t-value="((deltat.days) - int(annee) * 365)/30" />
+                     
+                    <tr>
+                      <td>Nombre de personne à charge</td>
+                      <td><span t-esc="len(o.employee_id.persone_acharge_ids)"/></td>
+                      <td>Ancienneté</td>
+                      <td><span t-esc="str(int(annee)) + ' ans ' + str(int(mois)) + ' mois'" /></td>
+                    </tr>
+                  </table>  
+                <t t-set="total_autre_retenue" t-value="0"/>
+                <p>Periode de <span t-field="o.date_from"/> au <span t-field="o.date_to"/> </p>
+                <div style="border: 0px solid black; width: 100%; margin:auto; padding: 0px; height: 650px; margin-top: 5px;" class="row">
+              <table class="MyTable">
+                <thead class="table-active totalback" style="border:1px solid black;">
+                  <tr>
+                  <td rowspan="2">N°</td><td rowspan="2">Designation</td><td rowspan="2">Nombre</td><td rowspan="2">Base</td><td colspan="3">Part salariale</td><td colspan="3">Part patronale</td>
+                </tr>
+                <tr>
+                  <td>Taux %</td><td>Gain</td><td>Retenue</td><td>Taux %</td><td>Retenue(+)</td><td>Retenue(-)</td>
+                </tr>
+                </thead>
+                <tbody class="table-light">
+                <!-- gain imposable -->
+                <t t-set="heure_sup" t-value="0"/>
+                  <tr t-foreach="o.line_ids.filtered(lambda line: line.appears_on_payslip).sorted(lambda line: line.sequence)" t-as="line">
+                      <t t-if="(line.category_id.name == 'GAIN IMPOSABLE' or line.category_id.name == 'REPRISE SUR SALAIRE') and line.total != 0">
+                        <td class="montant"><span t-field="line.code"/></td>
+                        <td><span class="rubrique" t-field="line.name"/></td>
+                        <td class="montant">
+                        <t t-if="line.code == '100'">
+                          <t t-esc="o.employee_id.contract_id.nombre_heure"/>
+                        </t>
+                        <t t-if="line.code == '110'">
+                          <t t-esc="o.employee_id.contract_id.heure_sup_12_jour"/>
+                          <t t-set="heure_sup" t-value="heure_sup + o.employee_id.contract_id.heure_sup_12_jour"/>
+                        </t>
+                        <t t-if="line.code == '111'">
+                          <t t-esc="o.employee_id.contract_id.heure_sup_35_jour"/>
+                          <t t-set="heure_sup" t-value="heure_sup + o.employee_id.contract_id.heure_sup_35_jour"/>
+                        </t>
+                        <t t-if="line.code == '112'">
+                          <t t-esc="o.employee_id.contract_id.heure_sup_50_jour"/>
+                          <t t-set="heure_sup" t-value="heure_sup + o.employee_id.contract_id.heure_sup_50_jour"/>
+                        </t>
+                        <t t-if="line.code == '113'">
+                          <t t-esc="o.employee_id.contract_id.heure_sup_50_jour_ferier"/>
+                          <t t-set="heure_sup" t-value="heure_sup + o.employee_id.contract_id.heure_sup_50_jour_ferier"/>
+                        </t>
+                        <t t-if="line.code == '113'">
+                          <t t-esc="o.employee_id.contract_id.heure_sup_100_nuit"/>
+                          <t t-set="heure_sup" t-value="heure_sup + o.employee_id.contract_id.heure_sup_100_nuit"/>
+                        </t>
+                        </td>
+                        <td class="montant">
+                         <t t-if="line.code == '100'">
+                          <t t-esc="'{:,}'.format(round(line.amount)).replace(',',' ')"/>
+                        </t>
+                          <t t-if="line.code == '110'">
+                            <t t-esc="'{:,}'.format(round(o.employee_id.contract_id.taux_horaire)).replace(',',' ')"/>
+                          </t>
+                          <t t-if="line.code == '111'">
+                            <t t-esc="'{:,}'.format(round(o.employee_id.contract_id.taux_horaire)).replace(',',' ')"/>
+                          </t>
+                          <t t-if="line.code == '112'">
+                            <t t-esc="'{:,}'.format(round(o.employee_id.contract_id.taux_horaire)).replace(',',' ')"/>
+                          </t>
+                          <t t-if="line.code == '113'">
+                            <t t-esc="'{:,}'.format(round(o.employee_id.contract_id.taux_horaire)).replace(',',' ')"/>
+                          </t>
+                          <t t-if="line.code == '114'">
+                            <t t-esc="'{:,}'.format(round(o.employee_id.contract_id.taux_horaire)).replace(',',' ')"/>
+                          </t>
+                        </td>
+                        <td class="montant">
+                          <t t-if="line.code == '100'">
+                           <t t-esc="o.employee_id.contract_id.nombre_heure"/>
+                        </t>
+                          <t t-if="line.code == '110'">
+                            <t t-esc="112"/>
+                          </t>
+                          <t t-if="line.code == '111'">
+                            <t t-esc="135"/>
+                          </t>
+                          <t t-if="line.code == '112'">
+                            <t t-esc="150"/>
+                          </t>
+                          <t t-if="line.code == '113'">
+                            <t t-esc="150"/>
+                          </t>
+                          <t t-if="line.code == '114'">
+                            <t t-esc="200"/>
+                          </t>
+                        </td>
+                        <td class="montant" t-if="line.total > 0"><span t-esc="'{:,}'.format(round(line.total)).replace(',',' ')" /></td>
+                        <td></td>
+                        <td class="montant" t-if="0 > line.total"><span t-esc="'{:,}'.format(round(-line.total)).replace(',',' ')" /></td>
+                        <td></td>
+                        <td></td>  
+                        <td></td>  
+                      </t>
+                  </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td class="montant"></td>
+                  <td class="montant"></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+         
+                <!-- total brut imposable -->
+                <t t-set="total_gain_impo" t-value="0"/>
+                <tr class="totalback" t-foreach="o.line_ids.filtered(lambda line: line.appears_on_payslip).sorted(lambda line: line.sequence)" t-as="line">
+                      <t t-if="line.category_id.name == 'Brut' and line.total != 0">
+                        <t t-set="total_gain_impo" t-value="line.total"/>
+                        <td></td>
+                        <td><span class="rubrique montant-total" t-field="line.name"/></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="montant-total montant" t-if="line.total > 0"><span t-esc="'{:,}'.format(round(line.total)).replace(',',' ')" /></td>
+                        <td></td>
+                        <td class="montant-total montant" t-if="0 > line.total"><span t-esc="'{:,}'.format(round(line.total)).replace(',',' ')" /></td>
+                        <td></td>
+                        <td></td>  
+                        <td></td>  
+                      </t>
+                </tr>
+                 <tr>
+                  <td class="sparator">--</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                </tr>
+                <!-- cotisation -->
+               
+                <tr t-foreach="o.line_ids.filtered(lambda line: line.appears_on_payslip).sorted(lambda line: line.sequence)" t-as="line">
+                    <t t-if="line.category_id.name == 'RETENUE'  or line.category_id.name == 'CHARGE PATRONALE' and line.total != 0 and line.sequence != 400">
+                      <td class="montant"><span t-field="line.code"/></td>
+                      <td><span class="rubrique" t-field="line.name"/></td>
+                      <td class="montant"></td>
+                      <td class="montant"><span t-if="line.category_id.name == 'RETENUE' or line.category_id.name == 'CHARGE PATRONALE'" t-esc="'{:,}'.format(round(line.amount)).replace(',',' ')" /></td>
+                      <td class="montant"><t t-if="line.category_id.name == 'RETENUE'" t-esc="line.rate" /></td>
+                      <td></td>
+                      <td class="montant"><span t-if="line.category_id.name == 'RETENUE'" t-esc="'{:,}'.format(round(line.total)).replace(',',' ')" /></td>
+                      <td class="montant"><t t-if="line.category_id.name == 'CHARGE PATRONALE'" t-esc="line.rate" /></td>
+                      <td></td>
+                      <td class="montant"><span t-if="line.category_id.name == 'CHARGE PATRONALE'" t-esc="'{:,}'.format(round(line.total)).replace(',',' ')" /></td>
+                    </t>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td class="montant"></td>
+                  <td class="montant"></td>
+                  <td class="montant"></td>
+                  <td class="montant"></td>
+                  <td class="montant"></td>
+                </tr>
+                <!-- total charge patronnale -->
+                 <t t-set="total_charge_patronnale" t-value="0"/>
+                 <t  t-foreach="o.line_ids.filtered(lambda line: line.appears_on_payslip).sorted(lambda line: line.sequence)" t-as="line">
+                  <t t-if="line.category_id.code == 'COMP'">
+                    <t t-set="total_charge_patronnale" t-value="total_charge_patronnale + line.total"/>
+                  </t>
+                 </t>
+                <!-- total charge salariale -->
+                 <t t-set="total_charge_salariale" t-value="0"/>
+                 <t  t-foreach="o.line_ids.filtered(lambda line: line.appears_on_payslip).sorted(lambda line: line.sequence)" t-as="line">
+                  <t t-if="line.category_id.code == 'DED'">
+                    <t t-set="total_charge_salariale" t-value="total_charge_salariale + line.total"/>
+                  </t>
+                 </t>
+                <!-- total cotisation salariale et patronale -->
+                <tr class="totalback">
+                  <td></td>
+                  <td class="rubrique montant-total">Total cotisation</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td class="montant-total montant"><span t-esc="'{:,}'.format(round(total_charge_salariale)).replace(',',' ')" /></td>
+                  <td></td>
+                  <td></td>
+                  <td class="montant-total montant"><span t-esc="'{:,}'.format(round(total_charge_patronnale)).replace(',',' ')" /></td>
+                </tr>
+                 <tr>
+                  <td class="sparator">-- </td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                </tr>
+                <tr t-foreach="o.line_ids.filtered(lambda line: line.appears_on_payslip).sorted(lambda line: line.sequence)" t-as="line">
+                    <t t-if="line.category_id.name == 'Retenue IR NET' and line.total != 0">
+                      <td class="montant"><span t-field="line.code"/></td>
+                      <td><span class="rubrique" t-field="line.name"/></td>
+                      <td class="montant"></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td class="montant"><span t-esc="'{:,}'.format(round(line.total)).replace(',',' ')" /></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>  
+                    </t>
+                </tr>
+                <!-- autre gain et retenu -->
+                <tr>
+                  <td class="sparator">--</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                </tr>
+                <tr t-foreach="o.line_ids.filtered(lambda line: line.appears_on_payslip).sorted(lambda line: line.sequence)" t-as="line">
+                    <t t-if="line.category_id.name == 'AUTRE GAIN' and line.total != 0">
+                      <td class="montant"><span t-field="line.code"/></td>
+                      <td><span class="rubrique" t-field="line.name"/></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td class="montant"><span t-esc="'{:,}'.format(round(line.total)).replace(',',' ')" /></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>  
+                    </t>
+                </tr>
+                <!-- autres gains et retenues -->
+                <tr>
+                  <td class="sparator">-- </td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                </tr>
+                <tr t-foreach="o.line_ids.filtered(lambda line: line.appears_on_payslip).sorted(lambda line: line.sequence)" t-as="line">
+                    <t t-if="line.category_id.code == 'ATRGR' and line.total != 0">
+                      <td class="montant"><span t-field="line.code"/></td>
+                      <td><span class="rubrique" t-field="line.name"/></td>
+                      <td class="montant"></td>
+                      <td></td>
+                      <td></td>
+                      <td class="montant"><span t-if="line.total > 0" t-esc="'{:,}'.format(round(line.total)).replace(',',' ')" /></td>
+                      <td class="montant"><span t-if="0 > line.total" t-esc="'{:,}'.format(round(-line.total)).replace(',',' ')" /></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>  
+                    </t>
+                </tr>
+                  <tr>
+                    <td colspan="10"></td>
+                  </tr>
+                </tbody>
+              </table>
+              </div>
+              <!-- salaire_brut -->
+              <t t-set="salaire_brut" t-value="0"/>
+              <t t-foreach="o.line_ids.filtered(lambda line: line.appears_on_payslip).sorted(lambda line: line.sequence)" t-as="line">
+                  <t t-if="line.category_id.code == 'Brut'">
+                   <t t-set="salaire_brut" t-value="salaire_brut + line.total"/>
+                  </t>
+              </t>
+              <!-- charge_patronale -->
+              <t t-set="charge_patronale" t-value="0"/>
+              <t t-foreach="o.line_ids.filtered(lambda line: line.appears_on_payslip).sorted(lambda line: line.sequence)" t-as="line">
+                  <t t-if="line.category_id.code == 'DED'">
+                   <t t-set="charge_patronale" t-value="charge_patronale + line.total"/>
+                  </t>
+              </t>
+              <!-- salaiare_net -->
+              <t t-set="salaiare_net" t-value="0"/>
+              <t t-foreach="o.line_ids.filtered(lambda line: line.appears_on_payslip).sorted(lambda line: line.sequence)" t-as="line">
+                  <t t-if="line.category_id.code == 'NET'">
+                   <t t-set="salaiare_net" t-value="salaiare_net + line.total"/>
+                  </t>
+              </t>
+             
+             <t t-set="cumule_sal_brut" t-value="0"/>
+             <t t-set="cumule_ch_sal" t-value="0"/>
+             <t t-set="cumule_ch_ptr" t-value="0"/>
+             <t t-set="cumule_net_impo" t-value="0"/>
+             <t t-set="cumule_heure_tr" t-value="0"/>
+              <t t-foreach="o.employee_id.payslip_ids" t-as="lines" style="border-bottom : 1px;">
+                
+                 <t t-set="datef" t-value="lines.date_to.strftime('%Y,%m,%d')"/>
+                 <t t-set="dated" t-value="o.date_to.strftime('%Y,%m,%d')"/>
+                 
+                 <t t-set="n1" t-value="datef.split(',')"/>
+                 <t t-set="n2" t-value="dated.split(',')"/>
+                 
+                 
+                 <t t-set="cumule_heure_tr" t-value="cumule_heure_tr + lines.employee_id.contract_id.nombre_heure"/>
+   
+                 <t t-set="d0" t-value="datetime.date(int(n1[0]),int(n1[1]),int(n1[2]))"/>
+                 <t t-set="d1" t-value="datetime.date(int(n2[0]),int(n2[1]),int(n2[2]))"/>
+                 <t t-set="nbr" t-value="0"/>
+
+                 <t t-if="n2[0] == n1[0]">
+                  <t t-set="nbr" t-value="1"/>
+                 </t>
+                 <t t-set="deltat" t-value="d1-d0"/>
+                 <t t-foreach="lines.line_ids" t-as="line">
+                    <t t-if="nbr == 1">
+                      <t t-if="deltat.days &gt;= 0">
+                        <t t-if="line.category_id.name == 'GAIN IMPOSABLE'">
+                          <t t-set="cumule_sal_brut" t-value="cumule_sal_brut + line.total"/>
+                        </t>
+                        <t t-if="line.category_id.name == 'RETENUE'">
+                          <t t-set="cumule_ch_sal" t-value="cumule_ch_sal + line.total"/>
+                        </t>
+                        <t t-if="line.category_id.name == 'CHARGE PATRONALE'">
+                          <t t-set="cumule_ch_ptr" t-value="cumule_ch_ptr + line.total"/>
+                        </t>
+                        <t t-if="line.category_id.name == 'Brut'">
+                          <t t-set="cumule_net_impo" t-value="cumule_net_impo + line.total"/>
+                        </t>
+                     </t>
+                    </t>
+                 </t>
+              </t>
+
+              <div style="border: 0px solid black; width: 100%; margin:auto; height: 100px; margin-top: 45px;" class="row">
+                <table class="MyTable">
+                  <thead>
+                    <tr class="table-active totalback">
+                      <td>Cumul</td><td>Salaire brut</td><td>Charges salariales</td><td>Charges patronales</td><td>Avantage en nature</td><td>Heures travaillées</td><td>Heures suplémentaires</td><td bgcolor="#d3d3d3">Net à payer</td>
+                    </tr>
+                    <tr class="table-light">
+                      <td>Periode</td>
+                      <td><t t-esc="'{:,}'.format(round(total_gain_impo)).replace(',',' ')" /></td>
+                      <td><t t-esc="'{:,}'.format(round(total_charge_salariale)).replace(',',' ')" /></td>
+                      <td><t t-esc="'{:,}'.format(round(total_charge_patronnale)).replace(',',' ')" /></td>
+                      <td>0</td>
+                      <td><t t-esc="o.employee_id.contract_id.nombre_heure" /></td>
+                      <td><t t-esc="heure_sup" /></td>
+                      <td rowspan="2"><t t-esc="'{:,}'.format(round(salaiare_net)).replace(',',' ')" /></td>   
+                    </tr>
+                    <tr class="table-light">
+                    <td>Année</td>
+                    <td><t t-esc="'{:,}'.format(round(cumule_sal_brut)).replace(',',' ')" /></td>
+                    <td><t t-esc="'{:,}'.format(round(cumule_ch_sal)).replace(',',' ')" /></td>
+                    <td><t t-esc="'{:,}'.format(round(cumule_ch_ptr)).replace(',',' ')" /></td>
+                    <td>0</td>
+                    <td><t t-esc="cumule_heure_tr" /></td>
+                    <td><t t-esc="heure_sup" /></td>        
+                    </tr>
+                  </thead>
+                </table>
+              </div>
+              </div>
+              <table width="100%" style="margin-bottom:100px;">
+                <tr>
+                  <td width="40%"></td>
+                  <td>EMPLOYEUR</td>
+                  <td>EMPLOYE(E)</td>
+                </tr>
+              </table>
+              <i>Pour vous aider à faire valoir vos droits, concervez ce bulletin de paie sans limitation de durée</i>
+            </t>
+        <!--</t>-->
+    </t>
+	</template>
+</odoo>
