@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DFS_SYDONIA>
+	<GENERAL_SEGMENT>
+		<reference>Amoutivé/0001</reference>
+		<ref_dat>12/08/2020</ref_dat>
+		<type_action>INSERT</type_action>
+		<statut>done</statut>		<date_envoie>12/08/2020</date_envoie>
+		<code_bureau>TG122</code_bureau>
+		<libelle_bureau>BUREAU DE L'AEROPORT</libelle_bureau>
+		<code_importateur>1000166599</code_importateur>
+		<nom_importateur> RAMCO </nom_importateur>
+	</GENERAL_SEGMENT>
+	<VENTES>
+		<numero_vol>00021</numero_vol>
+		<date_vol>12/08/2020</date_vol>
+		<nom_voyageur>TEST</nom_voyageur>
+		<prenom_voyageur>KOMI</prenom_voyageur>
+		<lieu_depart>LOME</lieu_depart>
+		<lieu_destination>PARIS</lieu_destination>
+		<type_piece>PASSEPORT</type_piece>
+		<numero_piece>123345667</numero_piece>
+		<nationalite>TOGOLAISE</nationalite>
+		<ARTICLE>
+			<name>[8410280211119] Cofrutos Pera juice 1L</name>
+			<price>950.0</price>
+			<categorie>-</categorie>
+			<quantity>1.0</quantity>
+			<date_vente>12/08/2020</date_vente>
+		</ARTICLE>
+		<ARTICLE>
+			<name>[5602835002874] Tom cake biscuit chocolate 240g 240g</name>
+			<price>850.0</price>
+			<categorie>-</categorie>
+			<quantity>1.0</quantity>
+			<date_vente>12/08/2020</date_vente>
+		</ARTICLE>
+	</VENTES>
+</DFS_SYDONIA>
